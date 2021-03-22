@@ -6,6 +6,9 @@ znap eval zcolors "zcolors ${(q)LS_COLORS}"
 # Configuration documented at:
 # https://github.com/marlonrichert/zsh-autocomplete/blob/main/.zshrc
 
+# Complete dotfiles (and folders!)
+setopt globdots
+
 # Implicit cd if directory is in command position
 setopt auto_cd
 
@@ -21,11 +24,7 @@ znap source marlonrichert/zsh-autocomplete
 bindkey -v
 # TODO: Investigate zsh-autokey bindings.
 
-# This line was in marlonrichert's .zshrc in his config repo
-export ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
-# README requires this to be at the end of file
-znap source zsh-users/zsh-syntax-highlighting
-
+cd $ZDOTDIR
 setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 export HISTSIZE=1000
@@ -57,17 +56,6 @@ case $(uname) in
    )
    ;;
 esac
-
-# Set the default Less options.
-# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
-# Remove -X and -F (exit if the content fits on one screen) to enable it.
-export LESS='-F -g -i -M -R -S -w -X -z-4'
-# Remove default pager flags that annoy me (like truncating long lines)
-if [[ $PAGER == less ]]; then
-        setopt hist_subst_pattern
-        LESS=$LESS:gs/-[gS]\ /
-        setopt no_hist_subst_pattern
-fi
 
 # Redirect `man zsh` to `man zshall` for convenience
 #unalias man # whence -f man
@@ -118,3 +106,19 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt
 
+# Set the default Less options.
+#GIT_PAGER='cat git diff'
+export LESS='-X -F -g -i -M -R -S -w -z-4'
+# Remove default pager flags that annoy me (like truncating long lines)
+#(Could define LESS explicitly, but I like this code demo for reference)
+if [[ $PAGER == less ]]; then
+        setopt hist_subst_pattern
+        LESS=$LESS:gs/-[gS]\ /
+        setopt no_hist_subst_pattern
+fi
+# https://stackoverflow.com/questions/2183900/how-do-i-prevent-git-diff-from-using-a-pager/2183920
+
+# This line was in marlonrichert's .zshrc in his config repo
+export ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
+# README requires this to be at the end of file
+znap source zsh-users/zsh-syntax-highlighting
