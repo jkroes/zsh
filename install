@@ -1,0 +1,13 @@
+#!/bin/zsh
+# Backup zsh files. You can delete them later if the files in ZDOTDIR are suitable.
+find ~ -type f -maxdepth 1 -name '.zsh*' -exec mv {} {}.bak \;
+ZDOTDIR=~/.config/zsh
+if [[ -d $ZDOTDIR ]]; then
+    mv $ZDOTDIR ${ZDOTDIR}_bak
+fi
+
+# Clone repo, point zsh at ZDOTDIR via ~/.zshenv, and restart zsh
+git clone ssh://git@github.com/jkroes/zshdot.git $ZDOTDIR
+echo 'ZDOTDIR=~/.config/zsh; source $ZDOTDIR/.zshenv' >| ~/.zshenv
+
+exec zsh --login
