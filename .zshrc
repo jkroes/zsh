@@ -1,3 +1,4 @@
+#!/bin/env zsh
 source ~/git/zsh-snap/znap.zsh
 
 znap source marlonrichert/zcolors
