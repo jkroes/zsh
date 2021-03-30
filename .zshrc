@@ -33,6 +33,50 @@ export SAVEHIST=1000
 export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
+# https://git-scm.com/docs/git
+export GIT_PAGER=less
+# Use pygments for syntax highlighting in less 
+# https://superuser.com/questions/117841/when-reading-a-file-with-less-or-more-how-can-i-get-the-content-in-colors
+#export LESS='-R'
+#export LESSOPEN="|$ZDOTDIR/.lessfilter %s"
+# Set the default Less options. -F causes less to exit if the content to display
+# is less than one screen; however, it also clears content from the screen. This
+# means `git diff` may display nothing. To disable this, ensure both options are set.
+export LESS='-X -F -g -i -M -R -S -w -z-4'
+# Remove default pager flags that annoy me (like truncating long lines)
+if [[ $PAGER == less ]]; then
+        setopt hist_subst_pattern
+        LESS=$LESS:gs/-[gS]\ /
+        setopt no_hist_subst_pattern
+fi
+
+# MANPAGER should set all crucial settings explicitly so that you don't have
+# to rely on potentially conflicting settings in .vimrc or init.vim
+# NOTE: man.vim and mapping `K` aren't necessary; however, this does have
+# the benefit of removing the prompt `Press ENTER or type command to continue`
+# after `q` from a manpage you entered via `K`. It also makes `:Man` available
+# if you want to view a manpage that is not the word under cursor.
+# --not-a-term disables the "Reading from stdin..." message
+# -R can be used in lieu of nomod
+# ruler shows line position. It can be customized via rulerformat
+export MANPAGER="/bin/sh -c \"col -b | \
+	vim -nM --not-a-term \
+	-c 'syntax on' \
+	-c 'map d <C-D>' \
+	-c 'map u <C-U>' \
+	-c 'map q :q<CR>' \
+	-c 'runtime ftplugin/man.vim' \
+	-c 'map K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' \
+	-c 'set ft=man ts=8 nolist nonu nomod linebreak breakindent wrap ruler rulerformat=%l\:%L\ (%p%%) ' \
+	-\""
+
+# Fuzzy find and open man pages
+fman() {
+    man -k . | fzf --prompt='Man> ' | awk '{print $1}' | xargs -r man
+}
+# Doesn't work with MANPAGER
+# See https://stackoverflow.com/questions/2183900/how-do-i-prevent-git-diff-from-using-a-pager/2183920 for ideas
+# export GIT_PAGER=
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
