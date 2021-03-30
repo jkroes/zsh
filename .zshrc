@@ -1,37 +1,34 @@
 #!/bin/env zsh
 source ~/git/zsh-snap/znap.zsh
 
+# LS_COLORS doesn't work with zsh-autocomplete, but this does
 znap source marlonrichert/zcolors
 znap eval zcolors "zcolors ${(q)LS_COLORS}"
 
 # Configuration documented at:
 # https://github.com/marlonrichert/zsh-autocomplete/blob/main/.zshrc
-
 # Complete dotfiles (and folders!)
 setopt globdots
-
 # Implicit cd if directory is in command position
 setopt auto_cd
-
 # With setopt auto_cd, display directories immediately
 zstyle ':autocomplete:*' min-input 0
-
 # Repeated tabs cycle completion menu visibly
 zstyle ':autocomplete:tab:*' widget-style menu-select
-
 znap source marlonrichert/zsh-autocomplete
 
 # Use vi mode
 bindkey -v
 # TODO: Investigate zsh-autokey bindings.
 
-cd $ZDOTDIR
 setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 export HISTSIZE=1000
 export SAVEHIST=1000
-export EDITOR=vim
-export VISUAL=vim
+export EDITOR=charm
+export CHEAT_CONFIG_PATH=~/.config/cheat/conf.yml
+# To make PAGER like MANPAGER, see
+# https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix
 export PAGER=less
 # https://git-scm.com/docs/git
 export GIT_PAGER=less
@@ -82,6 +79,9 @@ if [[ -z "$LANG" ]]; then
 fi
 path=(
   $path
+  ~/go/bin
+  # pipx-installed applications
+  ~/.local/bin
   # User-defined scripts
   ~/bin
 )
@@ -90,9 +90,18 @@ case $(uname) in
   Darwin)
     # Homebrew on ARM MacOS
     eval $(/opt/homebrew/bin/brew shellenv)
+    # TODO: Create completions for whichever tldr-pages client you use
     fpath=(
-      # Homebrew autocompletions
+      # Homebrew
       /opt/homebrew/share/zsh/site-functions
+      # cheat
+      # You have to copy
+      # ~/go/pkg/mod/github.com/cheat/cheat@v0.0.0-20201128162709-883a17092f08/scripts/cheat.zsh
+      # to ~/.local/share/cheat/_cheat.zsh. The leading underscore is required.
+      ~/.local/share/cheat
+      # tldr pages (original client installed via `npm -g install tldr`)
+      # TODO: Check out the tldr++ client
+      /opt/homebrew/lib/node_modules/tldr/bin/completion/zsh
       $fpath
     )
    path=(
@@ -101,7 +110,6 @@ case $(uname) in
    )
    ;;
 esac
-
 # Redirect `man zsh` to `man zshall` for convenience
 #unalias man # whence -f man
 #function man() {
@@ -151,19 +159,15 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt
 
-# Set the default Less options.
-#GIT_PAGER='cat git diff'
-export LESS='-X -F -g -i -M -R -S -w -z-4'
-# Remove default pager flags that annoy me (like truncating long lines)
-#(Could define LESS explicitly, but I like this code demo for reference)
-if [[ $PAGER == less ]]; then
-        setopt hist_subst_pattern
-        LESS=$LESS:gs/-[gS]\ /
-        setopt no_hist_subst_pattern
-fi
-# https://stackoverflow.com/questions/2183900/how-do-i-prevent-git-diff-from-using-a-pager/2183920
-
 # This line was in marlonrichert's .zshrc in his config repo
 export ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
 # README requires this to be at the end of file
 znap source zsh-users/zsh-syntax-highlighting
+
+# Toggle navi (fzf-powered cheats) w/ C-g
+# NOTE: Should be lower down in config to avoid
+# shadowing by zsh-autocomplete and friends
+eval "$(navi widget zsh)"
+# TODO: Create completions for navi
+
+cd $ZDOTDIR
