@@ -1,26 +1,7 @@
 #!/bin/env zsh
-source ~/git/zsh-snap/znap.zsh
-
-# LS_COLORS doesn't work with zsh-autocomplete, but this does
-znap source marlonrichert/zcolors
-znap eval zcolors "zcolors ${(q)LS_COLORS}"
-
-# Configuration documented at:
-# https://github.com/marlonrichert/zsh-autocomplete/blob/main/.zshrc
-# Complete dotfiles (and folders!)
-setopt globdots
-# Implicit cd if directory is in command position
-setopt auto_cd
-# With setopt auto_cd, display directories immediately
-zstyle ':autocomplete:*' min-input 0
-# Repeated tabs cycle completion menu visibly
-zstyle ':autocomplete:tab:*' widget-style menu-select
-znap source marlonrichert/zsh-autocomplete
 
 # Use vi mode
 bindkey -v
-# TODO: Investigate zsh-autokey bindings.
-
 setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 export HISTSIZE=1000
