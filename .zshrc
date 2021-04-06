@@ -145,15 +145,89 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt
 
-# This line was in marlonrichert's .zshrc in his config repo
-export ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
-# README requires this to be at the end of file
-znap source zsh-users/zsh-syntax-highlighting
-
 # Toggle navi (fzf-powered cheats) w/ C-g
 # NOTE: Should be lower down in config to avoid
 # shadowing by zsh-autocomplete and friends
 eval "$(navi widget zsh)"
 # TODO: Create completions for navi
 
-cd $ZDOTDIR
+#
+# completion
+#
+
+# Complete hidden files and folders
+setopt globdots
+
+#
+# fzf: fuzzy find and filter
+#
+
+# NOTE: This affects fzf-tab
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+
+# What to run when fzf is used as the primary command rather than as a pipeline filter
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+
+# See `man fd` for a link to the Rust flavour of regex. It is the same as 
+# that used by ripgrep, but an older version.
+
+# fzf install script includes autocompletion (fzf/shell/completion.zsh)
+# and keybindings that are enabled by /opt/homebrew/opt/fzf/install. It adds 
+# the following to .zshrc:
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# and creates ~/.fzf.zsh. Completion requires typing a trigger sequence ('**')
+# followed by TAB. It is specific to a limited number of commands such as cd,
+# ls, vim, etc. In contrast, vim-tab uses fzf as a frontend for the zsh 
+# completion system. It requires no trigger sequence and can use fzf for any 
+# command that provides a zsh completion script. 
+
+# For a discussion of fzf vs fzf-tab completion in zsh, see 
+# https://github.com/Aloxaf/fzf-tab/issues/65
+
+#
+# ripgrep + fzf
+#
+
+# See ~/bin/fzf-rg. Consider adding an alias.
+
+# See regex syntax: https://docs.rs/regex/1.4.5/regex/#syntax
+
+#
+# fzf-tab: fzf as zsh-completion frontend
+#
+
+autoload -Uz compinit
+compinit
+source ~/git/fzf-tab/fzf-tab.plugin.zsh
+
+# At the start of completion, all candidates are shown, 
+# highlighted by group. Switching group via ',' or '.' will change
+# the color of the active group (currently white) and limit the
+# completion candidates to that group. Note that the filtered
+# candidates retain the original color of the group.
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':fzf-tab:*' switch-group ',' '.'
+
+# disable sort when completing options of any command
+# NOTE: To show relevant zstyle contexts and tags, use 'C-x h' instead of TAB
+zstyle ':completion:complete:*:options' sort false
+
+# disable sort for `git log` completions; default chronological order
+zstyle ':completion:*:git-log:*' sort false
+
+# FZF previews (use single quotes around the preview commands)
+# TODO: This is too general and provides a preview for most completions.
+# Enable it only for completion of contexts where a file is expected. 
+# zstyle ':fzf-tab:complete:*' fzf-preview '[[ -f $realpath ]] && bat --style=numbers --color=always --line-range :100 $realpath' 
+## Ranger-like navigation of directories
+zstyle ':fzf-tab:*' continuous-trigger '/'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+
+alias ls=exa
+alias la='ls -la'
+# NOTE: This partially changes exa's apparently natural coloration, but also
+# allows for coloration with fzf-tab. Not sure how to tell fzf-tab to use
+# exa's natural coloration. At least both are consistent with each other now.
+# TODO: Investigate dircolors, exa, and this zstyle snippet
+eval $(gdircolors ~/dircolors/dracula.dircolors)
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
