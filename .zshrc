@@ -69,8 +69,6 @@ case $(uname) in
     eval $(/opt/homebrew/bin/brew shellenv)
     # TODO: Create completions for whichever tldr-pages client you use
     fpath=(
-      # Homebrew
-      /opt/homebrew/share/zsh/site-functions
       # cheat
       # You have to copy
       # ~/go/pkg/mod/github.com/cheat/cheat@v0.0.0-20201128162709-883a17092f08/scripts/cheat.zsh
@@ -80,6 +78,15 @@ case $(uname) in
       # TODO: Check out the tldr++ client
       /opt/homebrew/lib/node_modules/tldr/bin/completion/zsh
       $fpath
+      # There are two sources of git completion in zsh:
+      # /usr/share/zsh/5.8/functions/_git and the one in
+      # Homebrew. The zsh-provided git completion seems superior, as it includes
+      # descriptions for flags to git subcommands. See discussion:
+      # https://stackoverflow.com/questions/38725102/how-to-add-custom-git-command-to-zsh-completion
+      # TODO: Compare both to https://github.com/felipec/git-completion and
+      #  https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast
+      # Homebrew completions need to be lower in the path to avoid shadowing.
+      /opt/homebrew/share/zsh/site-functions
     )
    path=(
      # /Library/Frameworks/R.framework/Versions/Current/Resources/bin
