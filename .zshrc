@@ -13,10 +13,6 @@ export CHEAT_CONFIG_PATH=~/.config/cheat/conf.yml
 export PAGER=less
 # https://git-scm.com/docs/git
 export GIT_PAGER=less
-# Use pygments for syntax highlighting in less 
-# https://superuser.com/questions/117841/when-reading-a-file-with-less-or-more-how-can-i-get-the-content-in-colors
-#export LESS='-R'
-#export LESSOPEN="|$ZDOTDIR/.lessfilter %s"
 # Set the default Less options. -F causes less to exit if the content to display
 # is less than one screen; however, it also clears content from the screen. This
 # means `git diff` may display nothing. To disable this, ensure both options are set.
@@ -106,6 +102,8 @@ alias cdf='pwdf; cd "$(pwdf)"'
 # Super ranger. Also works with `d` and `1`-`9`
 # Source: https://superuser.com/questions/1043806/how-to-exit-the-ranger-file-explorer-back-to-command-prompt-but-keep-the-current#:~:text=If%20you%20hit%20Shift%20%2B%20S,it%20goes%20back%20to%20ranger%20.
 alias r='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
+
+alias cat=bat
 
 # View man pages as PDF in Preview
 # function pman() { man -t "$@" | open -f -a "Preview" ;}
