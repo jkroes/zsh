@@ -46,7 +46,30 @@ fi
 # (f)path
 #
 
+# snipcli installation and usage on MacOS arm64:
+# Install crystal-0.35.1-1.pkg:
+# https://github.com/crystal-lang/crystal/releases/tag/0.35.1
+# This will install to /opt/crystal
+# Add crystal and shard binaries to path by adding these paths to $path:
+# /opt/crystal/bin/
+# /opt/crystal/embedded/bin/
+# Install this snipcli fork from source in ~/git. 
+# (Note that the fork did not update the README to refer to itself when
+# running git clone)
+# > git clone https://github.com/ajones/snipcli
+# > cd ~/git/snipcli
+# > export path=(/opt/crystal/bin /opt/crystal/embedded/bin $path)
+# From https://crystal-lang.org/install/on_mac_os/:
+# > export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig
+# > shards
+# > crystal build src/snipline_cli.cr -o snipcli --release -o snipcli
+# Ignore the warning
+# > snipcli init
+# Alternative to snipcli:
+# https://github.com/yuki-yano/zsh-fzf-snippet
+
 path=(
+  ~/git/snipcli
   $path
   ~/go/bin
   ~/.local/bin # pipx-installed applications
