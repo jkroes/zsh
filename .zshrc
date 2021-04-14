@@ -55,8 +55,15 @@ path=(
 
 case $(uname) in
   Darwin)
-    # Homebrew on ARM MacOS
-    eval $(/opt/homebrew/bin/brew shellenv)
+    # Set up homebrew environment
+    case $(uname -m) in
+      x86_64)
+        eval $(/usr/local/bin/brew shellenv)
+      ;;
+      arm64)
+        eval $(/opt/homebrew/bin/brew shellenv)
+      ;;
+    esac
     # TODO: Create completions for whichever tldr-pages client you use
     fpath=(
       # cheat
@@ -66,7 +73,7 @@ case $(uname) in
       ~/.local/share/cheat
       # tldr pages (original client installed via `npm -g install tldr`)
       # TODO: Check out the tldr++ client
-      /opt/homebrew/lib/node_modules/tldr/bin/completion/zsh
+      $(brew --prefix)/lib/node_modules/tldr/bin/completion/zsh
       $fpath
       # There are two sources of git completion in zsh:
       # /usr/share/zsh/5.8/functions/_git and the one in
@@ -76,7 +83,7 @@ case $(uname) in
       # TODO: Compare both to https://github.com/felipec/git-completion and
       #  https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast
       # Homebrew completions need to be lower in the path to avoid shadowing.
-      /opt/homebrew/share/zsh/site-functions
+      $(brew --prefix)/share/zsh/site-functions
     )
    path=(
      # /Library/Frameworks/R.framework/Versions/Current/Resources/bin
