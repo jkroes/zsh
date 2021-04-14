@@ -221,30 +221,20 @@ alias r='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd
 
 # export CHEAT_CONFIG_PATH=~/.config/cheat/conf.yml
 
+#
+
 # Toggle navi w/ C-g
 eval "$(navi widget zsh)"
 
-# No auto-update of cheat repos yet, so make sure they're
-# in sync across different operating systems
-user=jkroes
-repo=mynavi
-export navidir="$(navi info cheats-path)/${user}__${repo}"
-if ! [[ -d $navidir ]]; then
-  git clone "https://github.com/${user}/${repo}" "$navidir"
-else
-  cd $navidir >/dev/null
-  git fetch
-  cd - >/dev/null
-fi
+# Configuration
+export NAVI_TAG_WIDTH=0 # tag col as small as possible (not actually 0%)
+export NAVI_COMMENT_WIDTH=50 # comment col roughly 50% of window
 
-#case $(uname) in
-#  Darwin)
-#    [[ -d ~/Library/ApplicationSupport/navi/cheats/]]
-#
-#    ;;
-#  Linux)
-#    ;;
-#esac
+
+# Symlink navi repo into ~/git
+[[ -d ~/Library/ApplicationSupport/navi/cheats/jkroes__mynavi/ ]] \
+&& ! [[ -d ~/git/jkroes__mynavi/ ]] \
+  && ln -s ~/Library/ApplicationSupport/navi/cheats/jkroes__mynavi/ ~/git/jkroes__mynavi
 
 #
 # Archived code
