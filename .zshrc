@@ -37,7 +37,7 @@ setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 export HISTSIZE=1000
 export SAVEHIST=1000
-export EDITOR=charm
+export EDITOR=vim
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
