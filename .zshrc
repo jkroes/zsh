@@ -55,7 +55,12 @@ path=(
 
 case $(uname) in
   Darwin)
-    # Set up homebrew environment
+    # Set up homebrew environment.
+    # NOTE: iTerm can run in Rosetta mode on MacOS M1:
+    # Navigate to /Applications/iTerm
+    # Right-click, Get Info.
+    # Check box for Rosetta.
+    # CMD-Q iTerm, launch, and check `uname -m`
     case $(uname -m) in
       x86_64)
         eval $(/usr/local/bin/brew shellenv)
