@@ -308,15 +308,6 @@ alias pn='pet new'
 # TODO: There's a way to configure Dash.app to open man pages. E.g., see https://gist.github.com/boneskull/4b6378784e2d719dd543. Note that Dash.app has instructions for adding Linux man pages.
 #function xmanpage() { open x-man-page://$@ ; }
 
-# cheat
-# You have to copy
-# ~/go/pkg/mod/github.com/cheat/cheat@v0.0.0-20201128162709-883a17092f08/scripts/cheat.zsh
-# to ~/.local/share/cheat/_cheat.zsh. The leading underscore is required.
-#Add to fpath: ~/.local/share/cheat
-# tldr pages (original client installed via `npm -g install tldr`)
-# TODO: Check out the tldr++ client
-#Add to fpath: $HOMEBREW_PREFIX/lib/node_modules/tldr/bin/completion/zsh
-
 # There are two sources of git completion in zsh:
 # /usr/share/zsh/5.8/functions/_git and the one in
 # Homebrew. The zsh-provided git completion seems superior, as it includes
