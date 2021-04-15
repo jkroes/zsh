@@ -262,7 +262,7 @@ function prev() {
   sh -c "pet new `printf %q "$PREV"`"
 }
 
-# C-s uses currrent line as pet query
+# C-s inserts selection into current line/buffer
 function pet-select() {
   BUFFER=$(pet search --query "$LBUFFER")
   CURSOR=$#BUFFER
@@ -270,22 +270,7 @@ function pet-select() {
 }
 zle -N pet-select
 stty -ixon
-bindkey '^s' pet-select
-
-# Insert selection into buffer to enable editing/completion
-# Inspired by denisidoro/navi
-# See `eval "$(navi widget zsh)"`, assuming navi is on PATH
-addText () {
-  # Save selection
-  local result=$(pet search)
-  # Otherwise no preceding prompt is displayed
-  zle reset-prompt
-  # zle redisplay # Identical to above
-  # Insert selection so you can finish completing
-  LBUFFER+=$result
-}
-zle -N addText
-bindkey '^G' addText
+bindkey '^g' pet-select
 
 alias pc='pet configure'
 alias pe='pet exec'
