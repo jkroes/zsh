@@ -1,4 +1,4 @@
-.zcompdump*
+.zcompdump
 .zsh_history
 znap-repos
 *.zwc
