@@ -243,25 +243,45 @@ alias la='ls -la'
 alias r='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 
 #
-# cheatsheets
+# pet: CLI snippets
 #
 
-# export CHEAT_CONFIG_PATH=~/.config/cheat/conf.yml
+# Add previous command to pet
+function prev() {
+  PREV=$(fc -lrn | head -n 1)
+  sh -c "pet new `printf %q "$PREV"`"
+}
 
-#
+# C-s uses currrent line as pet query
+function pet-select() {
+  BUFFER=$(pet search --query "$LBUFFER")
+  CURSOR=$#BUFFER
+  zle redisplay
+}
+zle -N pet-select
+stty -ixon
+bindkey '^s' pet-select
 
-# Toggle navi w/ C-g
-eval "$(navi widget zsh)"
+# Insert selection into buffer to enable editing/completion
+# Inspired by denisidoro/navi
+# See `eval "$(navi widget zsh)"`, assuming navi is on PATH
+addText () {
+  # Save selection
+  local result=$(pet search)
+  # Otherwise no preceding prompt is displayed
+  zle reset-prompt
+  # zle redisplay # Identical to above
+  # Insert selection so you can finish completing
+  LBUFFER+=$result
+}
+zle -N addText
+bindkey '^G' addText
 
-# Configuration
-export NAVI_TAG_WIDTH=0 # tag col as small as possible (not actually 0%)
-export NAVI_COMMENT_WIDTH=50 # comment col roughly 50% of window
-
-
-# Symlink navi repo into ~/git
-[[ -d ~/Library/ApplicationSupport/navi/cheats/jkroes__mynavi/ ]] \
-&& ! [[ -d ~/git/jkroes__mynavi/ ]] \
-  && ln -s ~/Library/ApplicationSupport/navi/cheats/jkroes__mynavi/ ~/git/jkroes__mynavi
+alias pc='pet configure'
+alias pe='pet exec'
+alias ped='pet edit'
+alias pl='pet list'
+alias pn='pet new'
 
 #
 # Archived code
