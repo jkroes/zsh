@@ -1,6 +1,16 @@
 #!/bin/env zsh
 
 #
+# Prompt
+#
+
+# http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
+# λ for regular user, ! for super user
+PROMPT='%(!.! .λ )'
+# Current directory on right 
+RPROMPT='%F{blue}%~%f'
+
+#
 # vim
 #
 
