@@ -47,12 +47,8 @@ fi
 #
 
 # snipcli installation and usage on MacOS arm64:
-# Install crystal-0.35.1-1.pkg:
+# Install crystal-0.35.1-1.pkg (/opt/crystal)
 # https://github.com/crystal-lang/crystal/releases/tag/0.35.1
-# This will install to /opt/crystal
-# Add crystal and shard binaries to path by adding these paths to $path:
-# /opt/crystal/bin/
-# /opt/crystal/embedded/bin/
 # Install this snipcli fork from source in ~/git. 
 # (Note that the fork did not update the README to refer to itself when
 # running git clone)
@@ -69,11 +65,11 @@ fi
 # https://github.com/yuki-yano/zsh-fzf-snippet
 
 path=(
-  ~/git/snipcli
   $path
   ~/go/bin
   ~/.local/bin # pipx-installed applications
   ~/bin # User-defined scripts
+  ~/git/snipcli
 )
 
 case $(uname) in
@@ -86,35 +82,31 @@ case $(uname) in
     # CMD-Q iTerm, launch, and check `uname -m`
     case $(uname -m) in
       x86_64)
-        eval $(/usr/local/bin/brew shellenv)
+        export HOMEBREW_PREFIX="/usr/local"
+        export HOMEBREW_CELLAR="/usr/local/Cellar";
+        export HOMEBREW_REPOSITORY="/usr/local/Homebrew";
       ;;
       arm64)
-        eval $(/opt/homebrew/bin/brew shellenv)
+        export HOMEBREW_PREFIX="/opt/homebrew";
+        export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
+        export HOMEBREW_REPOSITORY="/opt/homebrew";
       ;;
     esac
-    # TODO: Create completions for whichever tldr-pages client you use
+    infopath=(
+      $infopath
+      $HOMEBREW_PREFIX/share/info
+    )
+    manpath=(
+      $manpath
+      $HOMEBREW_PREFIX/share/man
+    )
     fpath=(
-      # cheat
-      # You have to copy
-      # ~/go/pkg/mod/github.com/cheat/cheat@v0.0.0-20201128162709-883a17092f08/scripts/cheat.zsh
-      # to ~/.local/share/cheat/_cheat.zsh. The leading underscore is required.
-      ~/.local/share/cheat
-      # tldr pages (original client installed via `npm -g install tldr`)
-      # TODO: Check out the tldr++ client
-      $(brew --prefix)/lib/node_modules/tldr/bin/completion/zsh
       $fpath
-      # There are two sources of git completion in zsh:
-      # /usr/share/zsh/5.8/functions/_git and the one in
-      # Homebrew. The zsh-provided git completion seems superior, as it includes
-      # descriptions for flags to git subcommands. See discussion:
-      # https://stackoverflow.com/questions/38725102/how-to-add-custom-git-command-to-zsh-completion
-      # TODO: Compare both to https://github.com/felipec/git-completion and
-      #  https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast
-      # Homebrew completions need to be lower in the path to avoid shadowing.
-      $(brew --prefix)/share/zsh/site-functions
+      $HOMEBREW_PREFIX/share/zsh/site-functions
     )
    path=(
-     # /Library/Frameworks/R.framework/Versions/Current/Resources/bin
+     $HOMEBREW_PREFIX/bin
+     $HOMEBREW_PREFIX/sbin
      $path
    )
    ;;
@@ -206,7 +198,7 @@ fman() {
 #
 
 autoload -Uz compinit
-compinit
+compinit -D
 source ~/git/fzf-tab/fzf-tab.plugin.zsh
 
 # At the start of completion, all candidates are shown, 
@@ -295,3 +287,21 @@ export NAVI_COMMENT_WIDTH=50 # comment col roughly 50% of window
 # Terminal.app is the default x-man-page handler. To make, x-man-page output prettier, configure the Man Page profile in Terminal to use white text, aquamarine bold text, red selection, and a black background.kkk
 # TODO: There's a way to configure Dash.app to open man pages. E.g., see https://gist.github.com/boneskull/4b6378784e2d719dd543. Note that Dash.app has instructions for adding Linux man pages.
 #function xmanpage() { open x-man-page://$@ ; }
+
+# cheat
+# You have to copy
+# ~/go/pkg/mod/github.com/cheat/cheat@v0.0.0-20201128162709-883a17092f08/scripts/cheat.zsh
+# to ~/.local/share/cheat/_cheat.zsh. The leading underscore is required.
+#Add to fpath: ~/.local/share/cheat
+# tldr pages (original client installed via `npm -g install tldr`)
+# TODO: Check out the tldr++ client
+#Add to fpath: $HOMEBREW_PREFIX/lib/node_modules/tldr/bin/completion/zsh
+
+# There are two sources of git completion in zsh:
+# /usr/share/zsh/5.8/functions/_git and the one in
+# Homebrew. The zsh-provided git completion seems superior, as it includes
+# descriptions for flags to git subcommands. See discussion:
+# https://stackoverflow.com/questions/38725102/how-to-add-custom-git-command-to-zsh-completion
+# TODO: Compare both to https://github.com/felipec/git-completion and
+#  https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast
+# Homebrew completions need to be lower in the path to avoid shadowing.
