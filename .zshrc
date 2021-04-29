@@ -262,9 +262,11 @@ function prev() {
   sh -c "pet new `printf %q "$PREV"`"
 }
 
-# C-s inserts selection into current line/buffer
+# C-g inserts selection into current line/buffer
+# NOTE: Example from README in GitHub omits inner quotes; however,
+# I found they were necessary. Perhaps our options are set differently
 function pet-select() {
-  BUFFER=$(pet search --query "$LBUFFER")
+  BUFFER=$(pet search --query "'$LBUFFER'")
   CURSOR=$#BUFFER
   zle redisplay
 }
