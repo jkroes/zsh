@@ -1,6 +1,20 @@
 #!/bin/env zsh
 
 #
+# Dependencies
+#
+
+# fzf
+# fzf-tab
+# fd
+# bat
+# exa
+# pet
+# dracula.dircolors
+# rg
+# fzf-rg (github.com/jkroes/home_bin)
+
+#
 # Prompt
 #
 
@@ -79,7 +93,6 @@ path=(
   ~/go/bin
   ~/.local/bin # pipx-installed applications
   ~/bin # User-defined scripts
-  ~/git/snipcli
 )
 
 case $(uname) in
@@ -164,6 +177,9 @@ export MANPAGER="/bin/sh -c \"col -b | \
 # fzf: fuzzy find and filter
 #
 
+# Run once on Linux after installing fd-find:
+# ln -s $(whence -f fdfind) ~/.local/bin/fd
+
 # NOTE: This affects fzf-tab
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
@@ -238,7 +254,21 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
 # allows for coloration with fzf-tab. Not sure how to tell fzf-tab to use
 # exa's natural coloration. At least both are consistent with each other now.
 # TODO: Investigate dircolors, exa, and this zstyle snippet
-eval $(gdircolors ~/dircolors/dracula.dircolors)
+
+if [[ ! -a ~/dircolors/dracula.dircolors ]]; then
+	if [[ ! -d ~/dircolors ]]; then
+		mkdir ~/dircolors
+	fi 
+	wget https://raw.githubusercontent.com/joshbenham/linux-dotfiles/master/dircolors/Dracula.dircolors > ~/dircolors/dracula.dircolors
+fi
+case $(uname) in
+	Darwin)
+		eval $(gdircolors ~/dircolors/dracula.dircolors)
+		;;
+	Linux)
+		eval $(dircolors ~/dircolors/dracula.dircolors)
+		;;
+esac
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 #
@@ -246,9 +276,16 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 #
 
 alias cdf='pwdf; cd "$(pwdf)"'
-alias cat=bat
+if type bat >/dev/null; then
+	alias cat=bat
+else
+	alias cat=batcat
+fi
 alias ls=exa
 alias la='ls -la'
+if type wslview >/dev/null; then
+	alias open=wslview
+fi
 # https://superuser.com/questions/1043806/how-to-exit-the-ranger-file-explorer-back-to-command-prompt-but-keep-the-current#:~:text=If%20you%20hit%20Shift%20%2B%20S,it%20goes%20back%20to%20ranger%20.
 alias r='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 
@@ -279,6 +316,9 @@ alias pe='pet exec'
 alias ped='pet edit'
 alias pl='pet list'
 alias pn='pet new'
+
+# For WSL
+cd ~/
 
 #
 # Archived code
