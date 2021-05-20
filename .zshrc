@@ -317,6 +317,10 @@ alias ped='pet edit'
 alias pl='pet list'
 alias pn='pet new'
 
+# Truecolor support for `emacs -nw` on MacOS
+# Requires following instructions at https://github.com/syl20bnr/spacemacs/wiki/Terminal
+export TERM=xterm-24bit
+
 # For WSL
 cd ~/
 
