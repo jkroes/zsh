@@ -61,7 +61,6 @@ setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 export HISTSIZE=1000
 export SAVEHIST=1000
-export EDITOR=vim
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
@@ -323,6 +322,18 @@ export TERM=xterm-24bit
 
 # For WSL
 cd ~/
+
+# Start emacs daemon if not running. This has the advantage of preserving open buffers
+# started in the session even if all windows have been closed.
+if ! emacsclient -e 0 >&/dev/null; then
+  emacs --daemon >/dev/null
+fi
+
+# Open files with running emacs server, then free the terminal
+alias e="emacsclient -n -c "
+
+# Open files in from ranger (among other programs)
+export EDITOR="emacsclient -c"
 
 #
 # Archived code
