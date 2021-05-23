@@ -61,7 +61,6 @@ setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 export HISTSIZE=1000
 export SAVEHIST=1000
-export EDITOR=vim
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
@@ -323,6 +322,23 @@ export TERM=xterm-24bit
 
 # For WSL
 cd ~/
+
+# Start emacs daemon if not running. This has the advantage of preserving open buffers
+# started in the session even if all windows have been closed. From testing, if the 
+# terminal that spawns it is killed, so is the emacs session. One improvement may be 
+# to spawn it when logging on to the OS.
+if ! emacsclient -e 0 >&/dev/null; then
+  emacs --daemon >/dev/null
+fi
+
+# Open files with running emacs server, then free the terminal
+alias e=~/bin/emacs-same-frame
+
+# Open files in from ranger (among other programs)
+export EDITOR=~/bin/emacs-same-frame
+
+# TODO: Use this as a basis to make emacsclient frame focus when launced:
+# https://www.emacswiki.org/emacs/TilingWindowManagers
 
 #
 # Archived code
