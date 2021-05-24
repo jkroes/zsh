@@ -324,9 +324,10 @@ export TERM=xterm-24bit
 cd ~/
 
 # Start emacs daemon if not running. This has the advantage of preserving open buffers
-# started in the session even if all windows have been closed. From testing, if the
-# terminal that spawns it is killed, so is the emacs session. One improvement may be
-# to spawn it when logging on to the OS.
+# started in the session even if all windows have been closed. From testing on MacOS,
+# this will continue running until `M-x kill-emacs' or removing the icon from dock.
+# (The icon only appears after you have created your first Emacs frame). The advantage
+# here over traditional Emacs is that all frames can be closed without killing Emacs.
 if ! emacsclient -e 0 >&/dev/null; then
   emacs --daemon >/dev/null
 fi
