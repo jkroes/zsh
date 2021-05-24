@@ -21,7 +21,7 @@
 # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
 # λ for regular user, ! for super user
 PROMPT='%(!.! .λ )'
-# Current directory on right 
+# Current directory on right
 RPROMPT='%F{blue}%~%f'
 
 #
@@ -72,7 +72,7 @@ fi
 # snipcli installation and usage on MacOS arm64:
 # Install crystal-0.35.1-1.pkg (/opt/crystal)
 # https://github.com/crystal-lang/crystal/releases/tag/0.35.1
-# Install this snipcli fork from source in ~/git. 
+# Install this snipcli fork from source in ~/git.
 # (Note that the fork did not update the README to refer to itself when
 # running git clone)
 # > git clone https://github.com/ajones/snipcli
@@ -187,27 +187,27 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 
 # TODO: Change command to execute command
 fhistory() {
-  builtin history -1000 | fzf 
+  builtin history -1000 | fzf
 }
 
 fman() {
     man -k . | fzf --prompt='Man> ' | awk '{print $1}' | xargs -r man
 }
 
-# See `man fd` for a link to the Rust flavour of regex. It is the same as 
+# See `man fd` for a link to the Rust flavour of regex. It is the same as
 # that used by ripgrep, but an older version.
 
 # fzf install script includes autocompletion (fzf/shell/completion.zsh)
-# and keybindings that are enabled by /opt/homebrew/opt/fzf/install. It adds 
+# and keybindings that are enabled by /opt/homebrew/opt/fzf/install. It adds
 # the following to .zshrc:
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # and creates ~/.fzf.zsh. Completion requires typing a trigger sequence ('**')
 # followed by TAB. It is specific to a limited number of commands such as cd,
-# ls, vim, etc. In contrast, vim-tab uses fzf as a frontend for the zsh 
-# completion system. It requires no trigger sequence and can use fzf for any 
-# command that provides a zsh completion script. 
+# ls, vim, etc. In contrast, vim-tab uses fzf as a frontend for the zsh
+# completion system. It requires no trigger sequence and can use fzf for any
+# command that provides a zsh completion script.
 
-# For a discussion of fzf vs fzf-tab completion in zsh, see 
+# For a discussion of fzf vs fzf-tab completion in zsh, see
 # https://github.com/Aloxaf/fzf-tab/issues/65
 
 #
@@ -226,7 +226,7 @@ autoload -Uz compinit
 compinit -D
 source ~/git/fzf-tab/fzf-tab.plugin.zsh
 
-# At the start of completion, all candidates are shown, 
+# At the start of completion, all candidates are shown,
 # highlighted by group. Switching group via ',' or '.' will change
 # the color of the active group (currently white) and limit the
 # completion candidates to that group. Note that the filtered
@@ -243,8 +243,8 @@ zstyle ':completion:*:git-log:*' sort false
 
 # FZF previews (use single quotes around the preview commands)
 # TODO: This is too general and provides a preview for most completions.
-# Enable it only for completion of contexts where a file is expected. 
-# zstyle ':fzf-tab:complete:*' fzf-preview '[[ -f $realpath ]] && bat --style=numbers --color=always --line-range :100 $realpath' 
+# Enable it only for completion of contexts where a file is expected.
+# zstyle ':fzf-tab:complete:*' fzf-preview '[[ -f $realpath ]] && bat --style=numbers --color=always --line-range :100 $realpath'
 ## Ranger-like navigation of directories
 zstyle ':fzf-tab:*' continuous-trigger '/'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
@@ -257,7 +257,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
 if [[ ! -a ~/dircolors/dracula.dircolors ]]; then
 	if [[ ! -d ~/dircolors ]]; then
 		mkdir ~/dircolors
-	fi 
+	fi
 	wget https://raw.githubusercontent.com/joshbenham/linux-dotfiles/master/dircolors/Dracula.dircolors > ~/dircolors/dracula.dircolors
 fi
 case $(uname) in
@@ -324,8 +324,8 @@ export TERM=xterm-24bit
 cd ~/
 
 # Start emacs daemon if not running. This has the advantage of preserving open buffers
-# started in the session even if all windows have been closed. From testing, if the 
-# terminal that spawns it is killed, so is the emacs session. One improvement may be 
+# started in the session even if all windows have been closed. From testing, if the
+# terminal that spawns it is killed, so is the emacs session. One improvement may be
 # to spawn it when logging on to the OS.
 if ! emacsclient -e 0 >&/dev/null; then
   emacs --daemon >/dev/null
