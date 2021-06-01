@@ -1,4 +1,4 @@
-#!/bin/env zsh
+#!/usr/bin/env zsh
 
 #
 # Dependencies
@@ -323,20 +323,14 @@ export TERM=xterm-24bit
 # For WSL
 cd ~/
 
-# Start emacs daemon if not running. This has the advantage of preserving open buffers
-# started in the session even if all windows have been closed. From testing on MacOS,
-# this will continue running until `M-x kill-emacs' or removing the icon from dock.
-# (The icon only appears after you have created your first Emacs frame). The advantage
-# here over traditional Emacs is that all frames can be closed without killing Emacs.
-if ! emacsclient -e 0 >&/dev/null; then
-  emacs --daemon >/dev/null
-fi
-
 # Open files with running emacs server, then free the terminal
 alias e=~/bin/emacs-same-frame
 
 # Open files in from ranger (among other programs)
 export EDITOR=~/bin/emacs-same-frame
+
+# git-commit aborts using the graphical EDITOR...
+export GIT_EDITOR="emacsclient -a '' -t"
 
 # TODO: Use this as a basis to make emacsclient frame focus when launced:
 # https://www.emacswiki.org/emacs/TilingWindowManagers
