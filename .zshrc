@@ -323,8 +323,9 @@ export TERM=xterm-24bit
 # For WSL
 cd ~/
 
+alias e="emacs --debug-init &"
 # Open files with running emacs server, then free the terminal
-alias e=~/bin/emacs-same-frame
+# alias e=~/bin/emacs-same-frame
 
 # Open files in from ranger (among other programs)
 export EDITOR=~/bin/emacs-same-frame
