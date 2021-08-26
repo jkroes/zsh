@@ -331,7 +331,8 @@ alias e="emacs --debug-init &"
 export EDITOR=~/bin/emacs-same-frame
 
 # git-commit aborts using the graphical EDITOR...
-export GIT_EDITOR="emacsclient -a '' -t"
+#export GIT_EDITOR="emacsclient -a '' -t"
+export GIT_EDITOR=vim
 
 # TODO: Use this as a basis to make emacsclient frame focus when launced:
 # https://www.emacswiki.org/emacs/TilingWindowManagers
